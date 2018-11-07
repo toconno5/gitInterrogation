@@ -1,11 +1,15 @@
+#install.packages("jsonlite")
 library(jsonlite)
+#install.packages("httpuv")
 library(httpuv)
+#install.packages("httr")
 library(httr)
 
-#Interrogates github
+# Can be github, linkedin etc depending on application
 oauth_endpoints("github")
+# Change based on what your application is
 
-#Change based on what you 
+# Change based on what you 
 myapp <- oauth_app(appname = "gitInterrogation",
                    key = "13be9ef2c3fd7874d6b7",
                    secret = "eac1a3a55bab0b0d4a2f85356a795fc851be9137")
@@ -27,20 +31,40 @@ json1 = content(req)
 gitDF = jsonlite::fromJSON(jsonlite::toJSON(json1))
 
 # Subset data.frame
-gitDF[gitDF$full_name == "jtleek/datasharing", "created_at"] 
+gitDF[gitDF$full_name == "jtleek/datasharing", "created_at"]
 
 #above code sourced from https://towardsdatascience.com/accessing-data-from-github-api-using-r-3633fb62cb08
 
 #Interrogate the Github API to extract data from my own github account
+
+#gets my data 
 myData = fromJSON("https://api.github.com/users/toconno5")
-myData$followers #dispalys number of followers
+
+#displays number of followers
+myData$followers
+
+followers = fromJSON("https://api.github.com/users/toconno5/followers")
+followers$login #gives user names of all my followers
+
 myData$following #displays number of people I am following
+
+following = fromJSON("https://api.github.com/users/toconno5/following")
+following$login #gives the names of all the people i am following
+
 myData$public_repos #displays the number of repositories I have
+
+repos = fromJSON("https://api.github.com/users/toconno5/repos")
+repos$name #Details of the names of my public repositories
+repos$created_at #Gives details of the date the repositories were created 
+repos$full_name #gives names of repositiories
+
 myData$bio #Displays my bio
+
+lcaRepos <- fromJSON("https://api.github.com/repos/toconno5/LCA/commits")
+lcaRepos$commit$message #The details I included describing each commit to LCA assignment repository 
 
 #Interrogate the Github API to extract data from another account by switching the username
 kennyc11Data = fromJSON("https://api.github.com/users/kennyc11")
-kennyc11Data$followers
-kennyc11Data$following 
-kennyc11Data$public_repos 
-kennyc11Data$bio 
+kennyc11Data$followers #lists the number of followers kennyc11 has
+kennyc11Data$following #lists the number of people kennyc11 is following
+kennyc11Data$public_repos #lists the number of repositories they have
